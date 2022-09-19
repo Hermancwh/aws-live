@@ -25,6 +25,23 @@ table = 'employee'
 def Dashboard():
     return render_template('DashBoard.html')
 
+@app.route("/employee", methods=['GET', 'POST'])
+def Employee():
+    return render_template('Employee.html')
+
+@app.route("/attendance", methods=['GET', 'POST'])
+def Attendance():
+    return render_template('Attendance.html')
+
+@app.route("/payroll", methods=['GET', 'POST'])
+def Payroll():
+    return render_template('Payroll.html')
+
+@app.route("/leave", methods=['GET', 'POST'])
+def Leave():
+    return render_template('Leave.html')
+
+
 # @app.route("/", methods=['GET', 'POST'])
 # def home():
 #     return render_template('AddEmp.html')
