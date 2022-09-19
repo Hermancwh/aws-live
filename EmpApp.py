@@ -22,8 +22,12 @@ table = 'employee'
 
 
 @app.route("/", methods=['GET', 'POST'])
-def home():
-    return render_template('AddEmp.html')
+def Dashboard():
+    return render_template('DashBoard.html')
+
+# @app.route("/", methods=['GET', 'POST'])
+# def home():
+#     return render_template('AddEmp.html')
 
 
 @app.route("/about", methods=['POST'])
@@ -79,7 +83,6 @@ def AddEmp():
 
     print("all modification done...")
     return render_template('AddEmpOutput.html', name=emp_name)
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
