@@ -41,16 +41,13 @@ def Payroll():
 def Leave():
     return render_template('Leave.html')
 
-
-# @app.route("/", methods=['GET', 'POST'])
-# def home():
-#     return render_template('AddEmp.html')
-
+@app.route("/adding", methods=['GET', 'POST'])
+def adding():
+    return render_template('AddEmp.html')
 
 @app.route("/about", methods=['POST'])
 def about():
     return render_template('www.intellipaat.com')
-
 
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
