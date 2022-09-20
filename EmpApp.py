@@ -20,14 +20,18 @@ db_conn = connections.Connection(
 output = {}
 table = 'employee'
 
-
 @app.route("/", methods=['GET', 'POST'])
 def Dashboard():
     return render_template('DashBoard.html')
 
 @app.route("/employee", methods=['GET', 'POST'])
 def Employee():
-    return render_template('Employee.html')
+    query_string = "SELECT * FROM employee"
+    cursor = db_conn.cursor()
+    cursor.execute(query_string)
+    employees = cursor.fetchall()
+    print(employees)
+    return render_template('Employee.html', employees=employees)
 
 @app.route("/attendance", methods=['GET', 'POST'])
 def Attendance():
@@ -65,7 +69,6 @@ def AddEmp():
         return "Please select a file"
 
     try:
-
         cursor.execute(insert_sql, (emp_id, first_name, last_name, pri_skill, location))
         db_conn.commit()
         emp_name = "" + first_name + " " + last_name
@@ -97,6 +100,20 @@ def AddEmp():
 
     print("all modification done...")
     return render_template('AddEmpOutput.html', name=emp_name)
+
+@app.route("/getemp", methods=['GET', 'POST'])
+def GetEmp():
+    if request.method == 'POST':
+        emp_id = request.form['emp_id']
+        query_string = "SELECT * FROM employee WHERE emp_id = %s"
+        cursor = db_conn.cursor()
+        cursor.execute(query_string, emp_id)
+        employee = cursor.fetchall()
+
+    else:
+        employee = ""
+
+    return render_template('GetEmp.html', employee=employee)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)

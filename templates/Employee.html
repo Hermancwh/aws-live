@@ -96,7 +96,28 @@
             </div>
         </nav>
         <!-- Navbar End -->
-    
+
+    {% if employees is defined %}
+    <table class="col-lg-12">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Skill</th>
+            <th>Location</th>
+        </tr>
+        </thead>
+        {% for employee in employees %}
+            <tr>
+            <td><h5 style="">{{ employee[0] }}</h5></td>
+            <td><h5 style="">{{ employee[1] }} {{ employee[2] }}</h5></td>
+            <td><h5 style="">{{ employee[3] }}</h5></td>
+            <td><h5 style="">{{ employee[4] }}</h5></td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
     </div>
     <!-- Content End -->
 

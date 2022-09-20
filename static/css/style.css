@@ -1,4 +1,8 @@
 /********** Template CSS **********/
+table {
+    width: 100%;
+}
+
 :root {
     --primary: #EB1616;
     --secondary: #191C24;

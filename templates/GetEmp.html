@@ -96,13 +96,21 @@
         </nav>
         <!-- Navbar End -->
 
-        <form action="/fetchdata" autocomplete="on" method="POST">
+        <form action="/getemp" autocomplete="on" method="POST">
 
             <h2 style="color: grey">Enter Employee ID</h2>
 
             Employee ID:<br> <input style="height:25px;font-size:14pt;" type="number" name="emp_id" autofocus size="40"><br><br>
 
-
+            {% if employee is defined %}
+                {% for employeeV in employee %}
+                <h5 style="">{{ employeeV[0] }}</h5>
+                <h5 style="">{{ employeeV[1] }}</h5>
+                <h5 style="">{{ employeeV[2] }}</h5>
+                <h5 style="">{{ employeeV[3] }}</h5>
+                <h5 style="">{{ employeeV[4] }}</h5>
+                {% endfor %}
+            {% endif %}
             <button type="submit"
                     style="background: grey; height: 45px; width: 200px; color: white; size: 5; font:oblique;">FETCH
                 INFO
