@@ -115,23 +115,5 @@ def GetEmp():
 
     return render_template('GetEmp.html', employee=employee)
 
-@app.route('/employee/<string:id>/delete', methods=['GET', 'POST'])
-def delete(id):
-    query_string = "SELECT * FROM employee WHERE emp_id = %s"
-    cursor = db_conn.cursor()
-    cursor.execute(query_string, id)
-    employee = cursor.fetchall()
-
-    return render_template('EditEmp.html', editEmp=employee)
-
-@app.route('/employee/<string:id>/delete', methods=['GET', 'POST'])
-def delete(id):
-    query_string = "SELECT * FROM employee WHERE emp_id = %s"
-    cursor = db_conn.cursor()
-    cursor.execute(query_string, id)
-    employee = cursor.fetchall()
-
-    return render_template('EditEmp.html', employee=employee)
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
