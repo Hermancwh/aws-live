@@ -30,7 +30,7 @@ def Employee():
     cursor = db_conn.cursor()
     cursor.execute(query_string)
     employees = cursor.fetchall()
-
+    print(employees)
     return render_template('Employee.html', employees=employees)
 
 @app.route("/attendance", methods=['GET', 'POST'])
