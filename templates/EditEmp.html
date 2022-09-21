@@ -97,17 +97,52 @@
         </nav>
         <!-- Navbar End -->
 
-    {% if employee is defined %}
-        {% for employees in employee %}
-        <p>This is {{ employees[1] }} {{ employees[2] }}</p>
+    {% if editEmp is defined %}
+        {% for employees in editEmp %}
+            <form action="" autocomplete="on" method="POST" enctype="multipart/form-data" style="text-align: center;">
 
-        <p>Are you sure want to delete?</p>
-        <a class="btn btn-primary mt-2 demo uk-button uk-button-default"
+                Employee ID:<br> <input class="form-control" style="border-color:white;" type="number" name="emp_id"
+                                        value="{{ employees[0] }}"
+                                        autofocus size="40"><br><br>
+
+                First Name:<br> <input class="form-control" style="border-color:white;" type="text" name="first_name"
+                                       value="{{ employees[1] }}"><br><br>
+
+                Last Name:<br> <input class="form-control" style="border-color:white;" type="text" name="last_name"
+                                      value="{{ employees[2] }}"><br><br>
+
+                Primary Skills:<br> <input class="form-control" style="border-color:white;" type="text" name="pri_skill"
+                                           value="{{ employees[3] }}"><br><br>
+
+                Location:<br> <input class="form-control" style="border-color:white;" type="text" name="location"
+                                     value="{{ employees[4] }}"><br><br>
+
+                {#            Image: <input type=file name="emp_image_file" style="border-color:white;"> <br><br>#}
+
+                <a class="btn btn-info mt-2 demo uk-button uk-button-default"
                    href='/employee'>NO</a>
-        <button class="btn btn-danger mt-2 demo uk-button uk-button-default"
-                   href='/employee/{{ employee[0] }}/delete'>YES</button>
-        {% endfor %}
+                <button class="btn btn-danger mt-2 demo uk-button uk-button-default" type="submit" name="submit"
+                        href='/employee/{{ editEmp[0] }}/edit'>UPDATE
+                </button>
+            </form>
 
+
+        {% endfor %}
+    {% endif %}
+
+    {% if deleteEmp is defined %}
+        {% for employees in deleteEmp %}
+            <form action="" method="POST">
+                <p>This is {{ employees[1] }} {{ employees[2] }}</p>
+
+                <p>Are you sure want to delete?</p>
+                <a class="btn btn-info mt-2 demo uk-button uk-button-default"
+                   href='/employee'>NO</a>
+                <button class="btn btn-danger mt-2 demo uk-button uk-button-default" type="submit" name="submit"
+                        href='/employee/{{ deleteEmp[0] }}/delete'>DELETE
+                </button>
+            </form>
+        {% endfor %}
     {% endif %}
 
     </div>

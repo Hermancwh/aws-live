@@ -30,7 +30,7 @@ def Employee():
     cursor = db_conn.cursor()
     cursor.execute(query_string)
     employees = cursor.fetchall()
-    print(employees)
+
     return render_template('Employee.html', employees=employees)
 
 @app.route("/attendance", methods=['GET', 'POST'])
@@ -122,16 +122,56 @@ def delete(id):
     cursor.execute(query_string, id)
     employee = cursor.fetchall()
 
-    return render_template('EditEmp.html', editEmp=employee)
+    return render_template('EditEmp.html', deleteEmp=employee)
 
-@app.route('/employee/<string:id>/delete', methods=['GET', 'POST'])
-def delete(id):
+@app.route('/employee/<string:id>/edit', methods=['GET', 'POST'])
+def edit(id):
     query_string = "SELECT * FROM employee WHERE emp_id = %s"
     cursor = db_conn.cursor()
     cursor.execute(query_string, id)
     employee = cursor.fetchall()
 
-    return render_template('EditEmp.html', employee=employee)
+    if request.method == 'POST':
+
+        emp_id = request.form['emp_id']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        pri_skill = request.form['pri_skill']
+        location = request.form['location']
+
+        try:
+            update_sql = "UPDATE employee SET (%s, %s, %s, %s) WHERE emp_id = %s"
+            cursor = db_conn.cursor()
+
+            cursor.execute(update_sql, (first_name, last_name, pri_skill, location, emp_id))
+            db_conn.commit()
+            # # Uplaod image file in S3 #
+            # emp_image_file_name_in_s3 = "emp-id-" + str(emp_id) + "_image_file"
+            # s3 = boto3.resource('s3')
+            #
+            # try:
+            #     print("Data inserted in MySQL RDS... uploading image to S3...")
+            #     s3.Bucket(custombucket).put_object(Key=emp_image_file_name_in_s3, Body=emp_image_file)
+            #     bucket_location = boto3.client('s3').get_bucket_location(Bucket=custombucket)
+            #     s3_location = (bucket_location['LocationConstraint'])
+            #
+            #     if s3_location is None:
+            #         s3_location = ''
+            #     else:
+            #         s3_location = '-' + s3_location
+            #
+            #     object_url = "https://s3{0}.amazonaws.com/{1}/{2}".format(
+            #         s3_location,
+            #         custombucket,
+            #         emp_image_file_name_in_s3)
+            #
+            # except Exception as e:
+            #     return str(e)
+
+        finally:
+            cursor.close()
+
+    return render_template('EditEmp.html', editEmp=employee)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)

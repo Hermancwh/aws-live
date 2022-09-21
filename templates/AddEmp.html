@@ -96,37 +96,33 @@
         </nav>
         <!-- Navbar End -->
 
-        <h1 style="color: DodgerBlue">Employee Database</h1>
+        <form action="/addemp" autocomplete="on" method="POST" enctype="multipart/form-data" style="text-align: center;">
+            <h1 style="color: DodgerBlue">Employee Database</h1>
 
-        <form action="/addemp" autocomplete="on" method="POST" enctype="multipart/form-data">
-
-            <button type="submit" formaction="/getemp"
-                    style="background: grey; height: 45px; width: 200px; color:white; font:oblique;">GET EMPLOYEE
-                INFORMATION
-            </button>
+            <a class="btn btn-primary mt-2 demo uk-button uk-button-default"
+                   href="/getemp">GET EMPLOYEE INFORMATION</a>
             <br><br>
 
-            Employee ID:<br> <input style="height:25px;font-size:14pt; color:grey;" type="number" name="emp_id"
+            Employee ID:<br> <input class="form-control" style="border-color:white;" type="number" name="emp_id"
                                     autofocus size="40"><br><br>
 
-            First Name:<br> <input style="height:25px;font-size:14pt;color:grey;" type="text" name="first_name"><br><br>
+            First Name:<br> <input class="form-control" style="border-color:white;" type="text" name="first_name"><br><br>
 
-            Last Name:<br> <input style="height:25px;font-size:14pt;color:grey;" type="text" name="last_name"><br><br>
+            Last Name:<br> <input class="form-control" style="border-color:white;" type="text" name="last_name"><br><br>
 
-            Primary Skills:<br> <input style="height:25px;font-size:14pt;color:grey;" type="text"
+            Primary Skills:<br> <input class="form-control" style="border-color:white;" type="text"
                                        name="pri_skill"><br><br>
 
-            Location:<br> <input style="height:25px;font-size:14pt;color:grey;" type="text" name="location"><br><br>
+            Location:<br> <input class="form-control" style="border-color:white;" type="text" name="location"><br><br>
 
-            Image: <input type=file name="emp_image_file" style="height:25px;font-size:14pt;color:grey;"> <br><br>
+            Image: <input type=file name="emp_image_file" style="border-color:white;"> <br><br>
 
-            <button type="submit"
-                    style="background: grey; height: 45px; width: 200px; color: white; size: 5; font:oblique;">UPDATE
-                DATABASE
+            <button class="btn btn-info mt-2 demo uk-button uk-button-default" type="submit"
+                    >UPDATE DATABASE
             </button>
 
         </form>
-        <a href="/about">About Us</a>
+        <a class="btn btn-primary mt-2 demo uk-button uk-button-default" href="/about">About Us</a>
     </div>
     <!-- Content End -->
 
