@@ -97,32 +97,17 @@
         </nav>
         <!-- Navbar End -->
 
-    {% if employees is defined %}
-    <table class="col-lg-12">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Skill</th>
-            <th>Location</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        {% for employee in employees %}
-            <tr>
-            <td><h5 style="">{{ employee[0] }}</h5></td>
-            <td><h5 style="">{{ employee[1] }} {{ employee[2] }}</h5></td>
-            <td><h5 style="">{{ employee[3] }}</h5></td>
-            <td><h5 style="">{{ employee[4] }}</h5></td>
-            <td>
-                <a class="btn btn-danger mt-2 demo uk-button uk-button-default"
-                   href='/employee/{{ employee[0] }}/delete'>DELETE</a>
-                <a class="btn btn-primary mt-2 demo uk-button uk-button-default"
-                   href='/employee/{{ employee[0] }}/edit'>EDIT</a>
-            </td>
-            </tr>
+    {% if employee is defined %}
+        {% for employees in employee %}
+        <p>This is {{ employees[1] }} {{ employees[2] }}</p>
+
+        <p>Are you sure want to delete?</p>
+        <a class="btn btn-primary mt-2 demo uk-button uk-button-default"
+                   href='/employee'>NO</a>
+        <button class="btn btn-danger mt-2 demo uk-button uk-button-default"
+                   href='/employee/{{ employee[0] }}/delete'>YES</button>
         {% endfor %}
-    </table>
+
     {% endif %}
 
     </div>
