@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from pymysql import connections
 import os
 import boto3
@@ -30,7 +30,14 @@ def Employee():
     cursor = db_conn.cursor()
     cursor.execute(query_string)
     employees = cursor.fetchall()
-    print(employees)
+    cursor.close()
+
+    count = "SELECT COUNT(*) FROM employee"
+    cursor = db_conn.cursor()
+    cursor.execute(count)
+    here = cursor.fetchall()
+    print(here[0][0])
+
     return render_template('Employee.html', employees=employees)
 
 @app.route("/attendance", methods=['GET', 'POST'])
@@ -55,12 +62,18 @@ def about():
 
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
-    emp_id = request.form['emp_id']
+    # emp_id = request.form['emp_id']
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     pri_skill = request.form['pri_skill']
     location = request.form['location']
     emp_image_file = request.files['emp_image_file']
+
+    counts = "SELECT COUNT(*) FROM employee"
+    cursor = db_conn.cursor()
+    cursor.execute(counts)
+    emp_id = cursor.fetchall()
+    emp_id = int(emp_id[0][0]) + 1
 
     insert_sql = "INSERT INTO employee VALUES (%s, %s, %s, %s, %s)"
     cursor = db_conn.cursor()
@@ -69,11 +82,11 @@ def AddEmp():
         return "Please select a file"
 
     try:
-        cursor.execute(insert_sql, (emp_id, first_name, last_name, pri_skill, location))
+        cursor.execute(insert_sql, (str(emp_id), first_name, last_name, pri_skill, location))
         db_conn.commit()
         emp_name = "" + first_name + " " + last_name
         # Uplaod image file in S3 #
-        emp_image_file_name_in_s3 = "emp-id-" + str(emp_id) + "_image_file"
+        emp_image_file_name_in_s3 = "emp-first-name-" + first_name + "_image_file"
         s3 = boto3.resource('s3')
 
         try:
@@ -122,6 +135,13 @@ def delete(id):
     cursor.execute(query_string, id)
     employee = cursor.fetchall()
 
+    if request.method == 'POST':
+        delete_sql = "DELETE FROM employee WHERE emp_id=%s"
+        cursor = db_conn.cursor()
+        cursor.execute(delete_sql, id)
+        db_conn.commit()
+        print("ID " + id + " successfully been deleted.")
+
     return render_template('EditEmp.html', deleteEmp=employee)
 
 @app.route('/employee/<string:id>/edit', methods=['GET', 'POST'])
@@ -140,11 +160,12 @@ def edit(id):
         location = request.form['location']
 
         try:
-            update_sql = "UPDATE employee SET (%s, %s, %s, %s) WHERE emp_id = %s"
+            update_sql = "UPDATE employee SET first_name=%s, last_name=%s, pri_skill=%s, location=%s WHERE emp_id=%s"
             cursor = db_conn.cursor()
 
             cursor.execute(update_sql, (first_name, last_name, pri_skill, location, emp_id))
             db_conn.commit()
+
             # # Uplaod image file in S3 #
             # emp_image_file_name_in_s3 = "emp-id-" + str(emp_id) + "_image_file"
             # s3 = boto3.resource('s3')
@@ -167,9 +188,10 @@ def edit(id):
             #
             # except Exception as e:
             #     return str(e)
-
         finally:
             cursor.close()
+
+        return redirect('/employee/' + emp_id + '/edit')
 
     return render_template('EditEmp.html', editEmp=employee)
 

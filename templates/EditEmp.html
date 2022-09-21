@@ -99,12 +99,8 @@
 
     {% if editEmp is defined %}
         {% for employees in editEmp %}
-            <form action="" autocomplete="on" method="POST" enctype="multipart/form-data" style="text-align: center;">
-
-                Employee ID:<br> <input class="form-control" style="border-color:white;" type="number" name="emp_id"
-                                        value="{{ employees[0] }}"
-                                        autofocus size="40"><br><br>
-
+            <form action="/employee/{{ employees[0] }}/edit" autocomplete="on" method="POST" enctype="multipart/form-data" style="text-align: center;">
+                <input type="hidden" value="{{ employees[0] }}" name="emp_id">
                 First Name:<br> <input class="form-control" style="border-color:white;" type="text" name="first_name"
                                        value="{{ employees[1] }}"><br><br>
 
@@ -122,7 +118,7 @@
                 <a class="btn btn-info mt-2 demo uk-button uk-button-default"
                    href='/employee'>NO</a>
                 <button class="btn btn-danger mt-2 demo uk-button uk-button-default" type="submit" name="submit"
-                        href='/employee/{{ editEmp[0] }}/edit'>UPDATE
+                        >UPDATE
                 </button>
             </form>
 
@@ -139,7 +135,7 @@
                 <a class="btn btn-info mt-2 demo uk-button uk-button-default"
                    href='/employee'>NO</a>
                 <button class="btn btn-danger mt-2 demo uk-button uk-button-default" type="submit" name="submit"
-                        href='/employee/{{ deleteEmp[0] }}/delete'>DELETE
+                        href='/employee/{{ employees[0] }}/delete'>DELETE
                 </button>
             </form>
         {% endfor %}

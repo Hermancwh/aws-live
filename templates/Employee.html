@@ -97,6 +97,8 @@
         </nav>
         <!-- Navbar End -->
 
+    <a class="btn btn-info mt-2 demo uk-button uk-button-default"
+   href='/adding'>ADD</a>
     {% if employees is defined %}
     <table class="col-lg-12">
         <thead>
@@ -115,9 +117,9 @@
             <td><h5 style="">{{ employee[3] }}</h5></td>
             <td><h5 style="">{{ employee[4] }}</h5></td>
             <td>
-                <a class="btn btn-danger mt-2 demo uk-button uk-button-default"
-                   href='/employee/{{ employee[0] }}/delete'>DELETE</a>
                 <a class="btn btn-primary mt-2 demo uk-button uk-button-default"
+                   href='/employee/{{ employee[0] }}/delete'>DELETE</a>
+                <a class="btn btn-info mt-2 demo uk-button uk-button-default"
                    href='/employee/{{ employee[0] }}/edit'>EDIT</a>
             </td>
             </tr>
