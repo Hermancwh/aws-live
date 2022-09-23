@@ -35,10 +35,9 @@ def Employee():
     count = "SELECT COUNT(*) FROM employee"
     cursor = db_conn.cursor()
     cursor.execute(count)
-    here = cursor.fetchall()
-    print(here[0][0])
+    count_emp = cursor.fetchall()
 
-    return render_template('Employee.html', employees=employees)
+    return render_template('Employee.html', employees=employees, count_emp=count_emp[0][0])
 
 @app.route("/attendance", methods=['GET', 'POST'])
 def Attendance():
@@ -141,6 +140,7 @@ def delete(id):
         cursor.execute(delete_sql, id)
         db_conn.commit()
         print("ID " + id + " successfully been deleted.")
+        return redirect('/employee')
 
     return render_template('EditEmp.html', deleteEmp=employee)
 

@@ -34,7 +34,7 @@
                         <hr class="dropdown-divider">
                         <a href="#" class="dropdown-item">
                             <div class="d-flex align-items-center">
-                                <img class="rounded-circle" src="{{ url_for('static', filename='img/user.jpg') }}" alt=""
+                                <img class="rounded-circle" src="https://chanwenhan-employee.s3.amazonaws.com/static/img/user.jpg" alt=""
                                      style="width: 40px; height: 40px;">
                                 <div class="ms-2">
                                     <h6 class="fw-normal mb-0">Jhon send you a message</h6>
@@ -97,8 +97,11 @@
         </nav>
         <!-- Navbar End -->
 
-    <a class="btn btn-info mt-2 demo uk-button uk-button-default"
-   href='/adding'>ADD</a>
+    <div class="col-12-lg">
+        <a class="btn btn-info mt-2 demo uk-button uk-button-default"
+           href='/adding'>ADD</a>
+        <h5>Total Employee: {{ count_emp }}</h5>
+    </div>
     {% if employees is defined %}
     <table class="col-lg-12">
         <thead>
