@@ -1,4 +1,4 @@
-{% extends "Base.html" %} {% block title %}Payroll{% endblock %} {% block content %}
+    {% extends "Base.html" %} {% block title %}Apply Leave{% endblock %} {% block content %}
 
     <!-- Content Start -->
     <div class="content">
@@ -95,49 +95,31 @@
             </div>
         </nav>
         <!-- Navbar End -->
-        <div class="col-sm-12 col-md-6 col-xl-4">
-            <div class="h-100 bg-secondary rounded p-4">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="mb-0">Calender</h6>
-                </div>
-                <div id="calender"></div>
-            </div>
-        </div>
 
-        <!-- Payroll Start -->
-        {% if payroll is defined %}
-        <div class="container-fluid pt-4 px-4">
-            <div class="bg-secondary text-center rounded p-4">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="mb-0">Payroll</h6>
-                </div>
-                <div class="table-responsive">
-                    <table class="table text-start align-middle table-bordered table-hover mb-0">
-                        <thead>
-                        <tr class="text-white">
-                            <th scope="col">Payroll ID</th>
-                            <th scope="col">Employee ID</th>
-                            <th scope="col">Pay Rate</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for payR in payroll %}
-                        <tr>
-                            <td>{{ payR[0] }}</td>
-                            <td>{{ payR[1] }}</td>
-                            <td>{{ payR[2] }}</td>
-                            <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        <!-- Payroll End -->
+        <form action="/leave/{{ employee[0] }}/apply" autocomplete="on" method="POST" enctype="multipart/form-data" style="text-align: center;">
+                <h5>Employee Name: {{ employee[1] }} {{ employee[2] }}</h5><br>
+
+                Start Date :<br> <input type="date" class="form-control" style="border-color:white;" id="datepicker" name="start_date"/><br>
+
+                End Date :<br> <input type="date" class="form-control" style="border-color:white;" id="datepicker" name="end_date"/><br>
+
+                Reason :<br> <input class="form-control" style="border-color:white;" type="text" name="reason"><br>
+
+                Status :<br> <input class="form-control" style="border-color:white;" type="text" name="status"><br><br>
+
+                <a class="btn btn-info mt-2 demo uk-button uk-button-default"
+                   href='/leave'>CANCEL</a>
+                <button class="btn btn-primary mt-2 demo uk-button uk-button-default" type="submit" name="submit"
+                        >APPLY
+                </button>
+            </form>
     </div>
     <!-- Content End -->
+
+    <script>
+        $(document).ready(function () {
+            $('#datepicker').datepicker();
+        });
+    </script>
 
 {% endblock %}

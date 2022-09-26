@@ -24,32 +24,82 @@ table = 'employee'
 def Dashboard():
     return render_template('DashBoard.html')
 
-@app.route("/employee", methods=['GET', 'POST'])
-def Employee():
+@app.route("/attendance", methods=['GET', 'POST'])
+def Attendance():
+    query_string = "SELECT * FROM attendance"
+    cursor = db_conn.cursor()
+    cursor.execute(query_string)
+    attendance = cursor.fetchall()
+    cursor.close()
+
+    return render_template('Attendance.html', attendance=attendance)
+
+@app.route("/payroll", methods=['GET', 'POST'])
+def Payroll():
+    query_string = "SELECT * FROM payroll"
+    cursor = db_conn.cursor()
+    cursor.execute(query_string)
+    payroll = cursor.fetchall()
+    cursor.close()
+
+    return render_template('Payroll.html', payroll=payroll)
+
+@app.route("/leave", methods=['GET', 'POST'])
+def Leave():
     query_string = "SELECT * FROM employee"
     cursor = db_conn.cursor()
     cursor.execute(query_string)
     employees = cursor.fetchall()
     cursor.close()
 
-    count = "SELECT COUNT(*) FROM employee"
+    return render_template('Leave.html', employees=employees)
+
+@app.route("/leave/<string:id>/apply", methods=['GET', 'POST'])
+def applyLeave(id):
+    query_string = "SELECT * FROM employee WHERE emp_id = %s"
     cursor = db_conn.cursor()
-    cursor.execute(count)
-    count_emp = cursor.fetchall()
+    cursor.execute(query_string, id)
+    employee = cursor.fetchone()
 
-    return render_template('Employee.html', employees=employees, count_emp=count_emp[0][0])
+    if request.method == 'POST':
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+        reason = request.form['reason']
+        status = request.form['status']
 
-@app.route("/attendance", methods=['GET', 'POST'])
-def Attendance():
-    return render_template('Attendance.html')
+        # auto-generate id
+        # unable to generate when the table is empty
+        try:
+            count = "SELECT COUNT(*) FROM leave"
+            cursor = db_conn.cursor()
+            cursor.execute(count)
+            count_check = cursor.fetchone()
 
-@app.route("/payroll", methods=['GET', 'POST'])
-def Payroll():
-    return render_template('Payroll.html')
+            if count_check != 0:
+                get_query = "SELECT * FROM leave ORDER BY leave_id DESC LIMIT 1"
+                cursor = db_conn.cursor()
+                cursor.execute(get_query)
+                latest_id = cursor.fetchone()
+                latest_id = int(latest_id[0]) + 1
+            else:
+                latest_id = 1
 
-@app.route("/leave", methods=['GET', 'POST'])
-def Leave():
-    return render_template('Leave.html')
+        except Exception as e:
+            print(str(e))
+
+        insert_sql = "INSERT INTO leave VALUES (%s, %s, %s, %s, %s, %s)"
+        cursor = db_conn.cursor()
+
+        try:
+            cursor.execute(insert_sql, (str(latest_id), id, start_date, end_date, reason, status))
+            db_conn.commit()
+
+        finally:
+            cursor.close()
+
+        print("Leave ID" +latest_id+ "has apply successfully.")
+
+    return render_template('applyLeave.html', employee=employee)
 
 @app.route("/adding", methods=['GET', 'POST'])
 def adding():
@@ -61,31 +111,41 @@ def about():
 
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
-    # emp_id = request.form['emp_id']
     first_name = request.form['first_name']
     last_name = request.form['last_name']
-    pri_skill = request.form['pri_skill']
+    email = request.form['email']
     location = request.form['location']
+    phone = request.form['phone']
+    position = request.form['position']
     emp_image_file = request.files['emp_image_file']
 
-    counts = "SELECT COUNT(*) FROM employee"
-    cursor = db_conn.cursor()
-    cursor.execute(counts)
-    emp_id = cursor.fetchall()
-    emp_id = int(emp_id[0][0]) + 1
+    #auto-generate id
+    try:
+        get_query = "SELECT * FROM employee ORDER BY emp_id DESC LIMIT 1"
+        cursor = db_conn.cursor()
+        cursor.execute(get_query)
+        latest_id = cursor.fetchone()
+    except Exception as e:
+        return str(e)
 
-    insert_sql = "INSERT INTO employee VALUES (%s, %s, %s, %s, %s)"
+    if latest_id is not None:
+        latest_id = int(latest_id[0]) + 1
+    else:
+        latest_id = 1
+
+    insert_sql = "INSERT INTO employee VALUES (%s, %s, %s, %s, %s, %s, %s)"
     cursor = db_conn.cursor()
 
+    # Upload Img
     if emp_image_file.filename == "":
         return "Please select a file"
 
     try:
-        cursor.execute(insert_sql, (str(emp_id), first_name, last_name, pri_skill, location))
+        cursor.execute(insert_sql, (str(latest_id), first_name, last_name, email, location, phone, position))
         db_conn.commit()
         emp_name = "" + first_name + " " + last_name
         # Uplaod image file in S3 #
-        emp_image_file_name_in_s3 = "emp-first-name-" + first_name + "_image_file"
+        emp_image_file_name_in_s3 = "emp_id_" + str(latest_id) + "_image_file"
         s3 = boto3.resource('s3')
 
         try:
@@ -109,8 +169,33 @@ def AddEmp():
 
     finally:
         cursor.close()
+    print("Done Employee Table...")
 
-    print("all modification done...")
+    #Add attendance
+    attendance_sql = "INSERT INTO attendance VALUES (%s, %s, %s, %s, %s, %s)"
+    cursor = db_conn.cursor()
+
+    try:
+        cursor.execute(attendance_sql, (str(latest_id), str(latest_id), "", "", "", ""))
+        db_conn.commit()
+
+    finally:
+        cursor.close()
+    print("Done Attendance Table...")
+
+    #Add Payroll
+    leave_sql = "INSERT INTO payroll VALUES (%s, %s, %s)"
+    cursor = db_conn.cursor()
+
+    try:
+        cursor.execute(leave_sql, (str(latest_id), str(latest_id), ""))
+        db_conn.commit()
+
+    finally:
+        cursor.close()
+    print("Done Payroll Table...")
+
+    print("Uploaded successful...")
     return render_template('AddEmpOutput.html', name=emp_name)
 
 @app.route("/getemp", methods=['GET', 'POST'])
@@ -127,6 +212,21 @@ def GetEmp():
 
     return render_template('GetEmp.html', employee=employee)
 
+@app.route("/employee", methods=['GET', 'POST'])
+def Employee():
+    query_string = "SELECT * FROM employee"
+    cursor = db_conn.cursor()
+    cursor.execute(query_string)
+    employees = cursor.fetchall()
+    cursor.close()
+
+    count = "SELECT COUNT(*) FROM employee"
+    cursor = db_conn.cursor()
+    cursor.execute(count)
+    count_emp = cursor.fetchall()
+
+    return render_template('Employee.html', employees=employees, count_emp=count_emp[0][0])
+
 @app.route('/employee/<string:id>/delete', methods=['GET', 'POST'])
 def delete(id):
     query_string = "SELECT * FROM employee WHERE emp_id = %s"
@@ -135,11 +235,29 @@ def delete(id):
     employee = cursor.fetchall()
 
     if request.method == 'POST':
-        delete_sql = "DELETE FROM employee WHERE emp_id=%s"
+        #Delete Payroll Row
+        delete_payroll_sql = "DELETE FROM payroll WHERE payroll_id=%s"
         cursor = db_conn.cursor()
-        cursor.execute(delete_sql, id)
+        cursor.execute(delete_payroll_sql, id)
         db_conn.commit()
-        print("ID " + id + " successfully been deleted.")
+        print("Payroll ID " + id + " successfully been deleted from payroll.")
+
+        #Delete Attendance Row
+        delete_attendance_sql = "DELETE FROM attendance WHERE attendance_id=%s"
+        cursor = db_conn.cursor()
+        cursor.execute(delete_attendance_sql, id)
+        db_conn.commit()
+        print("Attendance ID " + id + " successfully been deleted from attendance.")
+
+        #Delete Employee Row
+        delete_employee_sql = "DELETE FROM employee WHERE emp_id=%s"
+        cursor = db_conn.cursor()
+        cursor.execute(delete_employee_sql, id)
+        db_conn.commit()
+        print("Employeee ID " + id + " successfully been deleted from employee.")
+
+
+
         return redirect('/employee')
 
     return render_template('EditEmp.html', deleteEmp=employee)
@@ -156,14 +274,16 @@ def edit(id):
         emp_id = request.form['emp_id']
         first_name = request.form['first_name']
         last_name = request.form['last_name']
-        pri_skill = request.form['pri_skill']
+        email = request.form['email']
         location = request.form['location']
+        phone = request.form['phone']
+        position = request.form['position']
 
         try:
-            update_sql = "UPDATE employee SET first_name=%s, last_name=%s, pri_skill=%s, location=%s WHERE emp_id=%s"
+            update_sql = "UPDATE employee SET first_name=%s, last_name=%s, email=%s, location=%s, phone=%s, position=%s WHERE emp_id=%s"
             cursor = db_conn.cursor()
 
-            cursor.execute(update_sql, (first_name, last_name, pri_skill, location, emp_id))
+            cursor.execute(update_sql, (first_name, last_name, email, location, phone, position, emp_id))
             db_conn.commit()
 
             # # Uplaod image file in S3 #

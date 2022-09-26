@@ -1,4 +1,4 @@
-{% extends "Base.html" %} {% block title %}AddEmpOutput{% endblock %} {% block content %}
+{% extends "Base.html" %} {% block title %}Add Emp Output{% endblock %} {% block content %}
 
     <!-- Content Start -->
     <div class="content">
@@ -98,15 +98,11 @@
 
         <h1>SAVE SUCCESSFUL</h1><br>
         <h2>Following Employee has been added to the database</h2><br>
-        <h2>{{ name }}</h2><br>
-        <title>Add Emp Output</title>
+        <h2>Name: {{ name }}</h2><br>
         <form action="/adding" autocomplete="on" method="GET">
-
-            <button type="submit" style="background: grey; height: 45px; width: 200px; color:white; font:oblique;">GO
-                BACK
-            </button>
-            <br><br>
-
+            <button type="submit" class="btn btn-info mt-2 demo uk-button uk-button-default">Add Again</button>
+            <a class="btn btn-primary mt-2 demo uk-button uk-button-default"
+               href='/employee'>DONE</a>
         </form>
     </div>
     <!-- Content End -->

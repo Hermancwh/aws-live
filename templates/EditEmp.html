@@ -107,11 +107,17 @@
                 Last Name:<br> <input class="form-control" style="border-color:white;" type="text" name="last_name"
                                       value="{{ employees[2] }}"><br><br>
 
-                Primary Skills:<br> <input class="form-control" style="border-color:white;" type="text" name="pri_skill"
+                Email:<br> <input class="form-control" style="border-color:white;" type="text" name="email"
                                            value="{{ employees[3] }}"><br><br>
 
                 Location:<br> <input class="form-control" style="border-color:white;" type="text" name="location"
                                      value="{{ employees[4] }}"><br><br>
+
+                Mobile Phone:<br> <input class="form-control" style="border-color:white;" type="text" name="phone"
+                                     value="{{ employees[5] }}"><br><br>
+
+                Position:<br> <input class="form-control" style="border-color:white;" type="text" name="position"
+                                     value="{{ employees[6] }}"><br><br>
 
                 {#            Image: <input type=file name="emp_image_file" style="border-color:white;"> <br><br>#}
 
@@ -121,7 +127,6 @@
                         >UPDATE
                 </button>
             </form>
-
 
         {% endfor %}
     {% endif %}
@@ -133,7 +138,7 @@
 
                 <p>Are you sure want to delete?</p>
                 <a class="btn btn-info mt-2 demo uk-button uk-button-default"
-                   href='/employee'>NO</a>
+                   href='/employee'>BACK</a>
                 <button class="btn btn-danger mt-2 demo uk-button uk-button-default" type="submit" name="submit"
                         href='/employee/{{ employees[0] }}/delete'>DELETE
                 </button>
