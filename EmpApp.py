@@ -37,12 +37,19 @@ def Dashboard():
     cursor.execute(query_payroll)
     payroll = cursor.fetchall()
 
+    # calculate total amount payroll and pay rate
+    total_payroll = 0
+    total_payrate = 0
+    for x in range(len(payroll)):
+        total_payroll += float(payroll[x][3])
+        total_payrate += float(payroll[x][2])
+
     query_leaves = "SELECT * FROM leaves"
     cursor = db_conn.cursor()
     cursor.execute(query_leaves)
     leaves = cursor.fetchall()
 
-    return render_template('DashBoard.html', attendance=attendance, employees=employees, payroll=payroll, leaves=leaves)
+    return render_template('DashBoard.html', attendance=attendance, employees=employees, payroll=payroll, leaves=leaves, total_payroll=total_payroll, total_payrate=total_payrate, total_employee=len(employees), total_leave=len(leaves))
 
 @app.route("/attendance", methods=['GET', 'POST'])
 def Attendance():
@@ -119,11 +126,12 @@ def GetPayroll(id):
     if request.method == 'POST':
 
         pay_rate = request.form['pay_rate']
+        payroll_amount = request.form['payroll_amount']
 
         try:
-            update_sql = "UPDATE payroll SET pay_rate=%s WHERE payroll_id=%s"
+            update_sql = "UPDATE payroll SET pay_rate=%s, payroll_amount=%s WHERE payroll_id=%s"
             cursor = db_conn.cursor()
-            cursor.execute(update_sql, (pay_rate, id))
+            cursor.execute(update_sql, (pay_rate, payroll_amount, id))
             db_conn.commit()
 
         finally:
@@ -287,11 +295,11 @@ def AddEmp():
     print("Done Attendance Table...")
 
     #Add Payroll
-    leave_sql = "INSERT INTO payroll VALUES (%s, %s, %s)"
+    leave_sql = "INSERT INTO payroll VALUES (%s, %s, %s, %s)"
     cursor = db_conn.cursor()
 
     try:
-        cursor.execute(leave_sql, (str(latest_id), str(latest_id), ""))
+        cursor.execute(leave_sql, (str(latest_id), str(latest_id), "", "0"))
         db_conn.commit()
 
     finally:
@@ -338,6 +346,13 @@ def delete(id):
     employee = cursor.fetchall()
 
     if request.method == 'POST':
+        #Delete Payroll Row
+        delete_leaves_sql = "DELETE FROM leaves WHERE emp_id=%s"
+        cursor = db_conn.cursor()
+        cursor.execute(delete_leaves_sql, id)
+        db_conn.commit()
+        print("Leave ID " + id + " successfully been deleted from leave.")
+
         #Delete Payroll Row
         delete_payroll_sql = "DELETE FROM payroll WHERE payroll_id=%s"
         cursor = db_conn.cursor()

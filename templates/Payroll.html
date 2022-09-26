@@ -111,6 +111,7 @@
                             <th scope="col">Employee ID</th>
                             <th scope="col">Employee Name</th>
                             <th scope="col">Pay Rate</th>
+                            <th scope="col">Amount</th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
@@ -125,6 +126,7 @@
                                 {% endif %}
                             {% endfor %}
                             <td><h5>{{ payR[2] }}</h5></td>
+                            <td><h5>{{ payR[3] }}</h5></td>
                             <td><a class="btn btn-sm btn-primary" href="/payroll/{{ payR[1] }}/edit">Modify</a></td>
                         </tr>
                         {% endfor %}
