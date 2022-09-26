@@ -95,7 +95,8 @@
             </div>
         </nav>
         <!-- Navbar End -->
-               <!-- Payroll Start -->
+
+       <!-- Attendance Start -->
         <div class="container-fluid pt-4 px-4">
             <div class="bg-secondary text-center rounded p-4">
                 <div class="d-flex align-items-center justify-content-between mb-4">
@@ -119,7 +120,7 @@
                             <td>{{ attd[0] }}</td>
                             <td>{{ attd[1] }}</td>
                             <td>{{ attd[2] }}</td>
-                            <td><a class="btn btn-sm btn-primary" href="">Details</a></td>
+                            <td><a class="btn btn-sm btn-primary" href="/attendance/{{ attd[1] }}/edit">Details</a></td>
                         </tr>
                         {% endfor %}
                         </tbody>

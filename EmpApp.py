@@ -34,6 +34,34 @@ def Attendance():
 
     return render_template('Attendance.html', attendance=attendance)
 
+@app.route("/attendance/<string:id>/edit", methods=['GET', 'POST'])
+def GetAttendance(id):
+    query_string = "SELECT * FROM attendance WHERE emp_id = %s"
+    cursor = db_conn.cursor()
+    cursor.execute(query_string, id)
+    attendance = cursor.fetchone()
+
+    if request.method == 'POST':
+
+        total_hours = request.form['total_hours']
+        start_work = request.form['start_work']
+        end_work = request.form['end_work']
+        over_time = request.form['over_time']
+
+        try:
+            update_sql = "UPDATE attendance SET total_hours=%s, start_work=%s, end_work=%s, over_time=%s WHERE attendance_id=%s"
+            cursor = db_conn.cursor()
+            cursor.execute(update_sql, (total_hours, start_work, end_work, over_time, id))
+            db_conn.commit()
+
+        finally:
+            cursor.close()
+
+        print("Successfully edited Attendance ID " + id)
+        return redirect('/attendance')
+
+    return render_template('EditAttendance.html', attendance=attendance)
+
 @app.route("/payroll", methods=['GET', 'POST'])
 def Payroll():
     query_string = "SELECT * FROM payroll"
@@ -44,50 +72,88 @@ def Payroll():
 
     return render_template('Payroll.html', payroll=payroll)
 
+@app.route("/payroll/<string:id>/edit", methods=['GET', 'POST'])
+def GetPayroll(id):
+    query_string = "SELECT * FROM payroll WHERE emp_id = %s"
+    cursor = db_conn.cursor()
+    cursor.execute(query_string, id)
+    payroll = cursor.fetchone()
+
+    if request.method == 'POST':
+
+        pay_rate = request.form['pay_rate']
+
+        try:
+            update_sql = "UPDATE payroll SET pay_rate=%s WHERE payroll_id=%s"
+            cursor = db_conn.cursor()
+            cursor.execute(update_sql, (pay_rate, id))
+            db_conn.commit()
+
+        finally:
+            cursor.close()
+
+        print("Successfully edited Payroll ID "+id)
+        return redirect('/payroll')
+
+    return render_template('EditPayroll.html', payroll=payroll)
+
 @app.route("/leave", methods=['GET', 'POST'])
 def Leave():
+    emp_leaves = ""
     query_string = "SELECT * FROM employee"
     cursor = db_conn.cursor()
     cursor.execute(query_string)
     employees = cursor.fetchall()
     cursor.close()
 
-    return render_template('Leave.html', employees=employees)
+    if request.method == 'POST':
+        search_emp = request.form['search_emp']
 
-@app.route("/leave/<string:id>/apply", methods=['GET', 'POST'])
-def applyLeave(id):
+        try:
+            get_query = "SELECT * FROM leaves WHERE emp_id=%s ORDER BY leave_id"
+            cursor = db_conn.cursor()
+            cursor.execute(get_query, search_emp)
+            emp_leaves = cursor.fetchall()
+        except Exception as e:
+            print(str(e))
+
+        if emp_leaves is None:
+            emp_leaves = ""
+
+    return render_template('Leave.html', employees=employees, emp_leaves=emp_leaves)
+
+@app.route("/leave/<string:id>", methods=['GET', 'POST'])
+def settingLeave(id):
     query_string = "SELECT * FROM employee WHERE emp_id = %s"
     cursor = db_conn.cursor()
     cursor.execute(query_string, id)
     employee = cursor.fetchone()
 
+    return render_template('applyLeave.html', employee=employee)
+
+@app.route("/leave/<string:id>/apply", methods=['POST'])
+def applyLeave(id):
     if request.method == 'POST':
         start_date = request.form['start_date']
         end_date = request.form['end_date']
         reason = request.form['reason']
         status = request.form['status']
 
-        # auto-generate id
-        # unable to generate when the table is empty
+        #auto-generate id
         try:
-            count = "SELECT COUNT(*) FROM leave"
+            get_query = "SELECT * FROM leaves ORDER BY leave_id DESC LIMIT 1"
             cursor = db_conn.cursor()
-            cursor.execute(count)
-            count_check = cursor.fetchone()
-
-            if count_check != 0:
-                get_query = "SELECT * FROM leave ORDER BY leave_id DESC LIMIT 1"
-                cursor = db_conn.cursor()
-                cursor.execute(get_query)
-                latest_id = cursor.fetchone()
-                latest_id = int(latest_id[0]) + 1
-            else:
-                latest_id = 1
-
+            cursor.execute(get_query)
+            latest_id = cursor.fetchone()
         except Exception as e:
             print(str(e))
 
-        insert_sql = "INSERT INTO leave VALUES (%s, %s, %s, %s, %s, %s)"
+        if latest_id is not None:
+            latest_id = int(latest_id[0]) + 1
+        else:
+            latest_id = 1
+
+        insert_sql = "INSERT INTO leaves VALUES (%s, %s, %s, %s, %s, %s)"
         cursor = db_conn.cursor()
 
         try:
@@ -97,9 +163,9 @@ def applyLeave(id):
         finally:
             cursor.close()
 
-        print("Leave ID" +latest_id+ "has apply successfully.")
+        print("Leave ID " + str(latest_id) + " has apply successfully.")
 
-    return render_template('applyLeave.html', employee=employee)
+    return redirect('/leave')
 
 @app.route("/adding", methods=['GET', 'POST'])
 def adding():

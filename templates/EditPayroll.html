@@ -1,4 +1,4 @@
-{% extends "Base.html" %} {% block title %}Leave{% endblock %} {% block content %}
+    {% extends "Base.html" %} {% block title %}Edit Payroll{% endblock %} {% block content %}
 
     <!-- Content Start -->
     <div class="content">
@@ -96,93 +96,23 @@
         </nav>
         <!-- Navbar End -->
 
-        <!-- Search Leaves using EmpID -->
-        <div class="container-fluid pt-4 px-4">
-            <form action="/leave" autocomplete="on" method="POST" enctype="multipart/form-data"
-                  style="text-align: center;">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="mb-0">Search For Employee</h6>
-                </div>
-                <div class="d-flex mb-2">
-                    <input class="form-control bg-dark border-0" type="text" placeholder="Enter ID" name="search_emp">
-                    <button class="btn btn-info ms-2" type="submit" name="submit">SEARCH</button>
-                </div>
+        <form action="/payroll/{{ payroll[1] }}/edit" autocomplete="on" method="POST" enctype="multipart/form-data" style="text-align: center;">
+
+                Pay Rate :<br> <input type="text" class="form-control" style="border-color:white;" name="pay_rate" value="{{ payroll[2] }}"/><br>
+
+                <a class="btn btn-info mt-2 demo uk-button uk-button-default"
+                   href='/leave'>CANCEL</a>
+                <button class="btn btn-primary mt-2 demo uk-button uk-button-default" type="submit" name="submit"
+                        >SAVE
+                </button>
             </form>
-        </div>
-        {% if emp_leaves|length %}
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-secondary text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        {% for employee in employees %}
-                            {% if employee[0] == emp_leaves[0][1] %}
-                                <h6 class="mb-0">Employee: {{ employee[1] }} {{ employee[2] }}</h6>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                            <tr class="text-white">
-                                <th>Leave ID</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Reason</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for leaves in emp_leaves %}
-                                <tr>
-                                    <td><h5 style="">{{ leaves[0] }}</h5></td>
-                                    <td><h5 style="">{{ leaves[2] }}</h5></td>
-                                    <td><h5 style="">{{ leaves[3] }}</h5></td>
-                                    <td><h5 style="">{{ leaves[4] }}</h5></td>
-                                    <td><h5 style="">{{ leaves[5] }}</h5></td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        <!-- Leave  Start -->
-        <div class="container-fluid pt-4 px-4">
-            <div class="bg-secondary text-center rounded p-4">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="mb-0">Apply Leave Here</h6>
-                </div>
-                <div class="table-responsive">
-                    <table class="table text-start align-middle table-bordered table-hover mb-0">
-                        <thead>
-                        <tr class="text-white">
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Position</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for employee in employees %}
-                            <tr>
-                                <td><h5 style="">{{ employee[0] }}</h5></td>
-                                <td><h5 style="">{{ employee[1] }} {{ employee[2] }}</h5></td>
-                                <td><h5 style="">{{ employee[3] }}</h5></td>
-                                <td><h5 style="">{{ employee[6] }}</h5></td>
-                                <td>
-                                    <a class="btn btn-sm btn-primary"
-                                       href='leave/{{ employee[0] }}'>Apply</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- Payroll End -->
     </div>
     <!-- Content End -->
+
+    <script>
+        $(document).ready(function () {
+            $('#datepicker').datepicker();
+        });
+    </script>
 
 {% endblock %}
