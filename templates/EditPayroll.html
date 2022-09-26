@@ -100,8 +100,12 @@
 
                 Pay Rate :<br> <input type="text" class="form-control" style="border-color:white;" name="pay_rate" value="{{ payroll[2] }}"/><br>
 
+                Payroll Amount : {{ working_hours }} hours<br><br>
+
+                Payroll Amount :<br> <input type="text" class="form-control" style="border-color:white;" name="payroll_amount" value="{{ payroll_amount }}"/><br>
+
                 <a class="btn btn-info mt-2 demo uk-button uk-button-default"
-                   href='/leave'>CANCEL</a>
+                   href='/payroll'>CANCEL</a>
                 <button class="btn btn-primary mt-2 demo uk-button uk-button-default" type="submit" name="submit"
                         >SAVE
                 </button>

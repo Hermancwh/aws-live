@@ -22,7 +22,27 @@ table = 'employee'
 
 @app.route("/", methods=['GET', 'POST'])
 def Dashboard():
-    return render_template('DashBoard.html')
+    query_attendance = "SELECT * FROM attendance"
+    cursor = db_conn.cursor()
+    cursor.execute(query_attendance)
+    attendance = cursor.fetchall()
+
+    query_employee = "SELECT * FROM employee"
+    cursor = db_conn.cursor()
+    cursor.execute(query_employee)
+    employees = cursor.fetchall()
+
+    query_payroll = "SELECT * FROM payroll"
+    cursor = db_conn.cursor()
+    cursor.execute(query_payroll)
+    payroll = cursor.fetchall()
+
+    query_leaves = "SELECT * FROM leaves"
+    cursor = db_conn.cursor()
+    cursor.execute(query_leaves)
+    leaves = cursor.fetchall()
+
+    return render_template('DashBoard.html', attendance=attendance, employees=employees, payroll=payroll, leaves=leaves)
 
 @app.route("/attendance", methods=['GET', 'POST'])
 def Attendance():
@@ -30,9 +50,13 @@ def Attendance():
     cursor = db_conn.cursor()
     cursor.execute(query_string)
     attendance = cursor.fetchall()
-    cursor.close()
 
-    return render_template('Attendance.html', attendance=attendance)
+    query_string = "SELECT * FROM employee"
+    cursor = db_conn.cursor()
+    cursor.execute(query_string)
+    employees = cursor.fetchall()
+
+    return render_template('Attendance.html', attendance=attendance, employees=employees)
 
 @app.route("/attendance/<string:id>/edit", methods=['GET', 'POST'])
 def GetAttendance(id):
@@ -70,14 +94,27 @@ def Payroll():
     payroll = cursor.fetchall()
     cursor.close()
 
-    return render_template('Payroll.html', payroll=payroll)
+    query_string = "SELECT * FROM employee"
+    cursor = db_conn.cursor()
+    cursor.execute(query_string)
+    employees = cursor.fetchall()
+
+    return render_template('Payroll.html', payroll=payroll, employees=employees)
 
 @app.route("/payroll/<string:id>/edit", methods=['GET', 'POST'])
 def GetPayroll(id):
-    query_string = "SELECT * FROM payroll WHERE emp_id = %s"
+    payroll_string = "SELECT * FROM payroll WHERE emp_id = %s"
     cursor = db_conn.cursor()
-    cursor.execute(query_string, id)
+    cursor.execute(payroll_string, id)
     payroll = cursor.fetchone()
+
+    attendance_string = "SELECT * FROM attendance WHERE emp_id = %s"
+    cursor = db_conn.cursor()
+    cursor.execute(attendance_string, id)
+    attendance = cursor.fetchone()
+
+    working_hours = int(attendance[2]) + int(attendance[5])
+    payroll_amount = working_hours * payroll[2]
 
     if request.method == 'POST':
 
@@ -93,9 +130,9 @@ def GetPayroll(id):
             cursor.close()
 
         print("Successfully edited Payroll ID "+id)
-        return redirect('/payroll')
+        return redirect('/payroll/'+id+'/edit')
 
-    return render_template('EditPayroll.html', payroll=payroll)
+    return render_template('EditPayroll.html', payroll=payroll, working_hours=working_hours, payroll_amount=payroll_amount)
 
 @app.route("/leave", methods=['GET', 'POST'])
 def Leave():

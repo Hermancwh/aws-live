@@ -110,6 +110,7 @@
                         <tr class="text-white">
                             <th scope="col">Attendance ID</th>
                             <th scope="col">Employee ID</th>
+                            <th scope="col">Employee Name</th>
                             <th scope="col">Total Hours</th>
                             <th scope="col">Action</th>
                         </tr>
@@ -117,10 +118,15 @@
                         <tbody>
                         {% for attd in attendance %}
                         <tr>
-                            <td>{{ attd[0] }}</td>
-                            <td>{{ attd[1] }}</td>
-                            <td>{{ attd[2] }}</td>
-                            <td><a class="btn btn-sm btn-primary" href="/attendance/{{ attd[1] }}/edit">Details</a></td>
+                            <td><h5>{{ attd[0] }}</h5></td>
+                            <td><h5>{{ attd[1] }}</h5></td>
+                            {% for employee in employees %}
+                                {% if employee[0] == attd[1] %}
+                                    <td><h5>{{ employee[1] }} {{ employee[2] }}</h5></td>
+                                {% endif %}
+                            {% endfor %}
+                            <td><h5>{{ attd[2] + attd[5] }}</h5></td>
+                            <td><a class="btn btn-sm btn-primary" href="/attendance/{{ attd[1] }}/edit">Set</a></td>
                         </tr>
                         {% endfor %}
                         </tbody>

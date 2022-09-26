@@ -95,14 +95,6 @@
             </div>
         </nav>
         <!-- Navbar End -->
-        <div class="col-sm-12 col-md-6 col-xl-4">
-            <div class="h-100 bg-secondary rounded p-4">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="mb-0">Calender</h6>
-                </div>
-                <div id="calender"></div>
-            </div>
-        </div>
 
         <!-- Payroll Start -->
         {% if payroll is defined %}
@@ -117,6 +109,7 @@
                         <tr class="text-white">
                             <th scope="col">Payroll ID</th>
                             <th scope="col">Employee ID</th>
+                            <th scope="col">Employee Name</th>
                             <th scope="col">Pay Rate</th>
                             <th scope="col">Action</th>
                         </tr>
@@ -124,10 +117,15 @@
                         <tbody>
                         {% for payR in payroll %}
                         <tr>
-                            <td>{{ payR[0] }}</td>
-                            <td>{{ payR[1] }}</td>
-                            <td>{{ payR[2] }}</td>
-                            <td><a class="btn btn-sm btn-primary" href="/payroll/{{ payR[1] }}/edit">Detail</a></td>
+                            <td><h5>{{ payR[0] }}</h5></td>
+                            <td><h5>{{ payR[1] }}</h5></td>
+                            {% for employee in employees %}
+                                {% if employee[0] == payR[1] %}
+                                    <td><h5>{{ employee[1] }} {{ employee[2] }}</h5></td>
+                                {% endif %}
+                            {% endfor %}
+                            <td><h5>{{ payR[2] }}</h5></td>
+                            <td><a class="btn btn-sm btn-primary" href="/payroll/{{ payR[1] }}/edit">Modify</a></td>
                         </tr>
                         {% endfor %}
                         </tbody>
