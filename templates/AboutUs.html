@@ -1,6 +1,6 @@
-{% extends "Base.html" %} {% block title %}Employee{% endblock %} {% block content %}
+{% extends "Base.html" %} {% block title %}AboutUs{% endblock %} {% block content %}
 
-    <!-- Content Start -->
+<!-- Content Start -->
     <div class="content">
 
         <!-- Navbar Start -->
@@ -97,47 +97,6 @@
         </nav>
         <!-- Navbar End -->
 
-    {% if employees is defined %}
-    <div class="container-fluid pt-4 px-4">
-        <div class="bg-secondary text-center rounded p-4">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <h6 class="mb-0">Total Employee: {{ count_emp }}</h6>
-                <a class="btn btn-info mt-2 demo uk-button uk-button-default"
-                   href='/adding'>ADD</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table text-start table-bordered table-hover mb-0">
-                    <thead class="text-align: center;">
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Position</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    {% for employee in employees %}
-                        <tr>
-                        <td><h5 style="">{{ employee[0] }}</h5></td>
-                        <td><h5 style="">{{ employee[1] }} {{ employee[2] }}</h5></td>
-                        <td><h5 style="">{{ employee[3] }}</h5></td>
-                        <td><h5 style="">{{ employee[6] }}</h5></td>
-                        <td>
-                            <a class="btn btn-sm btn-primary"
-                               href='/employee/{{ employee[0] }}/delete'>DELETE</a>
-                            <a class="btn btn-sm btn-info"
-                               href='/employee/{{ employee[0] }}/edit'>EDIT</a>
-                        </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
     </div>
-    {% endif %}
-    </div>
-
-
-    <!-- Content End -->
 
 {% endblock %}

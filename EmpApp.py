@@ -220,6 +220,10 @@ def adding():
 def about():
     return render_template('www.intellipaat.com')
 
+@app.route("/aboutUs", methods=['GET', 'POST'])
+def aboutUs():
+    return render_template('AboutUs.html')
+
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
     first_name = request.form['first_name']
