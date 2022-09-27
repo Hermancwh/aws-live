@@ -15,13 +15,20 @@ db_conn = connections.Connection(
     user=customuser,
     password=custompass,
     db=customdb
-
 )
 output = {}
 table = 'employee'
 
 @app.route("/", methods=['GET', 'POST'])
 def Dashboard():
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     query_attendance = "SELECT * FROM attendance"
     cursor = db_conn.cursor()
     cursor.execute(query_attendance)
@@ -53,6 +60,14 @@ def Dashboard():
 
 @app.route("/attendance", methods=['GET', 'POST'])
 def Attendance():
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     query_string = "SELECT * FROM attendance"
     cursor = db_conn.cursor()
     cursor.execute(query_string)
@@ -67,6 +82,14 @@ def Attendance():
 
 @app.route("/attendance/<string:id>/edit", methods=['GET', 'POST'])
 def GetAttendance(id):
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     query_string = "SELECT * FROM attendance WHERE emp_id = %s"
     cursor = db_conn.cursor()
     cursor.execute(query_string, id)
@@ -95,6 +118,14 @@ def GetAttendance(id):
 
 @app.route("/payroll", methods=['GET', 'POST'])
 def Payroll():
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     query_string = "SELECT * FROM payroll"
     cursor = db_conn.cursor()
     cursor.execute(query_string)
@@ -110,6 +141,14 @@ def Payroll():
 
 @app.route("/payroll/<string:id>/edit", methods=['GET', 'POST'])
 def GetPayroll(id):
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     payroll_string = "SELECT * FROM payroll WHERE emp_id = %s"
     cursor = db_conn.cursor()
     cursor.execute(payroll_string, id)
@@ -144,6 +183,14 @@ def GetPayroll(id):
 
 @app.route("/leave", methods=['GET', 'POST'])
 def Leave():
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     emp_leaves = ""
     query_string = "SELECT * FROM employee"
     cursor = db_conn.cursor()
@@ -169,6 +216,14 @@ def Leave():
 
 @app.route("/leave/<string:id>", methods=['GET', 'POST'])
 def settingLeave(id):
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     query_string = "SELECT * FROM employee WHERE emp_id = %s"
     cursor = db_conn.cursor()
     cursor.execute(query_string, id)
@@ -178,6 +233,14 @@ def settingLeave(id):
 
 @app.route("/leave/<string:id>/apply", methods=['POST'])
 def applyLeave(id):
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     if request.method == 'POST':
         start_date = request.form['start_date']
         end_date = request.form['end_date']
@@ -214,18 +277,50 @@ def applyLeave(id):
 
 @app.route("/adding", methods=['GET', 'POST'])
 def adding():
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     return render_template('AddEmp.html')
 
 @app.route("/about", methods=['POST'])
 def about():
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     return render_template('www.intellipaat.com')
 
 @app.route("/aboutUs", methods=['GET', 'POST'])
 def aboutUs():
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     return render_template('AboutUs.html')
 
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     first_name = request.form['first_name']
     last_name = request.form['last_name']
     email = request.form['email']
@@ -315,6 +410,14 @@ def AddEmp():
 
 @app.route("/getemp", methods=['GET', 'POST'])
 def GetEmp():
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     if request.method == 'POST':
         emp_id = request.form['emp_id']
         query_string = "SELECT * FROM employee WHERE emp_id = %s"
@@ -329,6 +432,14 @@ def GetEmp():
 
 @app.route("/employee", methods=['GET', 'POST'])
 def Employee():
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     query_string = "SELECT * FROM employee"
     cursor = db_conn.cursor()
     cursor.execute(query_string)
@@ -344,6 +455,14 @@ def Employee():
 
 @app.route('/employee/<string:id>/delete', methods=['GET', 'POST'])
 def delete(id):
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     query_string = "SELECT * FROM employee WHERE emp_id = %s"
     cursor = db_conn.cursor()
     cursor.execute(query_string, id)
@@ -386,6 +505,14 @@ def delete(id):
 
 @app.route('/employee/<string:id>/edit', methods=['GET', 'POST'])
 def edit(id):
+    db_conn = connections.Connection(
+        host=customhost,
+        port=3306,
+        user=customuser,
+        password=custompass,
+        db=customdb
+    )
+
     query_string = "SELECT * FROM employee WHERE emp_id = %s"
     cursor = db_conn.cursor()
     cursor.execute(query_string, id)
